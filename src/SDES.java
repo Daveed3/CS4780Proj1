@@ -89,7 +89,7 @@ public class SDES {
 		byte[] c = ct4;
 		byte[] p = pt4;
 		
-		printArray(Encyrpt(r, p));
+		printArray(Encrypt(r, p));
 		printArray(Decrypt(r, c));
 	}
 	
@@ -333,8 +333,8 @@ public class SDES {
 		return keys;
 	}
 	
-	public static byte[] Encyrpt(byte[] rawkey, byte[] plaintext) {
-		byte[] encyrptedText = null;
+	public static byte[] Encrypt(byte[] rawkey, byte[] plaintext) {
+		byte[] encryptedText = null;
 		
 		// Method consisting of P10, Left Shifts, and P8 to generate keys
 		ArrayList<byte[]> keys = GenerateKeys(rawkey);
@@ -357,13 +357,13 @@ public class SDES {
 		byte[] combined2 = combineBytes(round2, subArray(combined, 4, 7));
 		
 		// Inverse Permutation
-		encyrptedText = InversePermutation(combined2);
+		encryptedText = InversePermutation(combined2);
 		System.out.println("EncryptedText");
-		return encyrptedText;
+		return encryptedText;
 	}
 	
 	public static byte[] Decrypt(byte[] rawkey, byte[] ciphertext) {
-		byte[] decyrptedText = null;
+		byte[] decryptedText = null;
 		
 		ArrayList<byte[]> keys = GenerateKeys(rawkey);
 		byte[] k1 = keys.get(0);
@@ -383,9 +383,9 @@ public class SDES {
 		byte[] combined2 = combineBytes(round2, subArray(combined, 4, 7));		
 		
 		//InvP
-		decyrptedText = InversePermutation(combined2);		
+		decryptedText = InversePermutation(combined2);		
 		System.out.println("Decrypted Text:");
-		return decyrptedText;
+		return decryptedText;
 	}
 	
 	public static void printArray(byte[] array) {
