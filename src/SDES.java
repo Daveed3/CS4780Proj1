@@ -53,7 +53,7 @@ public class SDES {
 			{"10", "00", "01", "11"},
 			{"11", "00", "01", "00"},
 			{"10", "01", "00", "11"} };
-	
+		
 	static boolean debug = false;
 
 	public static void main(String[] args) {
@@ -75,22 +75,116 @@ public class SDES {
 		byte[] ct3 = {0,1,1,1,0,0,0,0};
 		byte[] ct4 = {0,0,0,0,0,1,0,0};
 		
-		byte[] rawkey1 = {0,0,0,0,0,0,0,0,0,0};
-		byte[] rawkey2 = {1,1,1,1,1,1,1,1,1,1};
-		byte[] rawkey3 = {0,0,0,0,0,1,1,1,1,1};
-		byte[] rawkey4 = {0,0,0,0,0,1,1,1,1,1};
+		byte[] rawkey1 = {0,0,0,0,0, 0,0,0,0,0};
+		byte[] rawkey2 = {1,1,1,1,1, 1,1,1,1,1};
+		byte[] rawkey3 = {0,0,0,0,0, 1,1,1,1,1};
+		byte[] rawkey4 = {0,0,0,0,0, 1,1,1,1,1};
+		byte[] rawkey5 = {1,0,0,0,1, 0,1,1,1,0};
+		byte[] rawkey6 = {1,0,0,0,1, 0,1,1,1,0};
+		byte[] rawkey7 = {0,0,1,0,0, 1,1,1,1,1};
+		byte[] rawkey8 = {0,0,1,0,0, 1,1,1,1,1}; 
 		byte[] plaintext1 = {0,0,0,0,0,0,0,0};
 		byte[] plaintext2 = {1,1,1,1,1,1,1,1};
 		byte[] plaintext3 = {0,0,0,0,0,0,0,0};
-		byte[] plaintext4 = {1,1,1,1,1,1,1,1};
+		byte[] plaintext4 = {1,1,1,1,1,1,1,1}; 
+		byte[] plaintext5 = {0,0,1,1, 1,0,0,0};
+		byte[] plaintext6 = {0,0,0,0, 1,1,0,0};
+		byte[] plaintext7 = {1,1,1,1, 1,1,0,0};
+		byte[] plaintext8 = {1,0,1,0, 0,1,0,1};
+		byte[] ciphertext1 = {1,1,1,1, 0,0,0,0};
+		byte[] ciphertext2 = {0,0,0,0, 1,1,1,1};
+		byte[] ciphertext3 = {0,0,0,0,0,0,0,0};
+		byte[] ciphertext4 = {1,1,1,0, 0,0,0,1}; 
+		byte[] ciphertext5 = {0,0,0,1, 1,1,0,0};
+		byte[] ciphertext6 = {1,1,0,0, 0,0,1,0};
+		byte[] ciphertext7 = {1,0,0,1, 1,1,0,1};
+		byte[] ciphertext8 = {1,0,0,1, 0,0,0,0};
 		
 		
-		byte[] r = rk4;
-		byte[] c = ct4;
-		byte[] p = pt4;
-		
+		byte[] r = rawkey1;
+		byte[] c = ciphertext1;
+		byte[] p = plaintext1;
+
+		System.out.println("EncryptedText");
 		printArray(Encrypt(r, p));
+		System.out.println("Decrypted Text:");
 		printArray(Decrypt(r, c));
+	}
+	
+	public static byte[] Encrypt(byte[] rawkey, byte[] plaintext) {
+		byte[] encryptedText = new byte[plaintext.length];
+		
+		// Method consisting of P10, Left Shifts, and P8 to generate keys
+		ArrayList<byte[]> keys = GenerateKeys(rawkey);
+		byte[] k1 = keys.get(0);
+		byte[] k2 = keys.get(1);
+		
+		// If plaintext is longer than 8 bits
+		int ceiling = (int) Math.ceil(plaintext.length / 8) * 8;
+		for (int i=0; i<plaintext.length; i+=8) {
+			byte[] subplaintext = subArray(plaintext, i, i+7);
+			// Initial Permutation
+			byte[] ip = InitialPermutation(subplaintext);
+			
+			// Round consisting of Expand/Permutate, XOR, S0 and S1, P4, and final XOR
+			byte[] round1 = round(ip, k1);
+			
+			// Swap
+			byte[] combined = combineBytes(subArray(ip, 4, 7), round1);
+			
+			// Round 2
+			byte[] round2 = round(combined, k2);
+			
+			// Swap 2
+			byte[] combined2 = combineBytes(round2, subArray(combined, 4, 7));
+			
+			// Inverse Permutation
+			byte[] subEncryptedText = InversePermutation(combined2);
+			
+			for (int j=0; j<8; j++) {
+				encryptedText[i+j] = subEncryptedText[j];
+			}
+			
+		}
+		
+		return encryptedText;
+	}
+	
+	public static byte[] Decrypt(byte[] rawkey, byte[] ciphertext) {
+		byte[] decryptedText = new byte[ciphertext.length];
+		
+		ArrayList<byte[]> keys = GenerateKeys(rawkey);
+		byte[] k1 = keys.get(0);
+		byte[] k2 = keys.get(1);
+		
+		// In case ciphertext is greater than 8 bits
+		int ceiling = (int) Math.ceil(ciphertext.length / 8) * 8;
+		for (int i=0; i<ciphertext.length; i+=8) {
+			byte[] subciphertext = subArray(ciphertext, i, i+7);
+			
+			//IP
+			byte[] ip = InitialPermutation(subciphertext);
+			
+			//fk w/ K2
+			byte[] round1 = round(ip, k2);
+			
+			//SW
+			byte[] combined = combineBytes(subArray(ip, 4, 7), round1);
+			
+			//fk w/ K1
+			byte[] round2 = round(combined, k1);
+			byte[] combined2 = combineBytes(round2, subArray(combined, 4, 7));		
+			
+			//InvP
+			byte[] subDecryptedText = InversePermutation(combined2);	
+			
+			for (int j=0; j<8; j++) {
+				decryptedText[i+j] = subDecryptedText[j];
+			}
+			
+		}
+			
+		return decryptedText;
 	}
 	
 	public static byte[] P10(byte[] rawkey) {
@@ -333,66 +427,19 @@ public class SDES {
 		return keys;
 	}
 	
-	public static byte[] Encrypt(byte[] rawkey, byte[] plaintext) {
-		byte[] encryptedText = null;
-		
-		// Method consisting of P10, Left Shifts, and P8 to generate keys
-		ArrayList<byte[]> keys = GenerateKeys(rawkey);
-		byte[] k1 = keys.get(0);
-		byte[] k2 = keys.get(1);
-		
-		// Initial Permutation
-		byte[] ip = InitialPermutation(plaintext);
-		
-		// Round consisting of Expand/Permutate, XOR, S0 and S1, P4, and final XOR
-		byte[] round1 = round(ip, k1);
-		
-		// Swap
-		byte[] combined = combineBytes(subArray(ip, 4, 7), round1);
-		
-		// Round 2
-		byte[] round2 = round(combined, k2);
-		
-		// Swap 2
-		byte[] combined2 = combineBytes(round2, subArray(combined, 4, 7));
-		
-		// Inverse Permutation
-		encryptedText = InversePermutation(combined2);
-		System.out.println("EncryptedText");
-		return encryptedText;
-	}
-	
-	public static byte[] Decrypt(byte[] rawkey, byte[] ciphertext) {
-		byte[] decryptedText = null;
-		
-		ArrayList<byte[]> keys = GenerateKeys(rawkey);
-		byte[] k1 = keys.get(0);
-		byte[] k2 = keys.get(1);
-		
-		//IP
-		byte[] ip = InitialPermutation(ciphertext);
-		
-		//fk w/ K2
-		byte[] round1 = round(ip, k2);
-		
-		//SW
-		byte[] combined = combineBytes(subArray(ip, 4, 7), round1);
-		
-		//fk w/ K1
-		byte[] round2 = round(combined, k1);
-		byte[] combined2 = combineBytes(round2, subArray(combined, 4, 7));		
-		
-		//InvP
-		decryptedText = InversePermutation(combined2);		
-		System.out.println("Decrypted Text:");
-		return decryptedText;
-	}
-	
 	public static void printArray(byte[] array) {
 		for (int i=0; i< array.length; i++) {
 			System.out.print(array[i]);
 		}
 		System.out.println();
+	}
+	
+	public static byte[] toByteArray (String message){
+		byte[] temp = new byte[message.length()];
+		for(int i = 0; i < message.length(); i++){
+			temp[i] = (message.charAt(i) == '1') ? (byte)1 : (byte)0;
+		}
+		return temp;
 	}
 	
 }

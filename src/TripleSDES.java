@@ -46,6 +46,9 @@ public class TripleSDES {
 		{"10", "00", "01", "11"},
 		{"11", "00", "01", "00"},
 		{"10", "01", "00", "11"} };
+	
+	static String msg2 = "00011111100111111110011111101100111000000011001011110010101010110001011101001101000000110011010111111110000000001010111111000001010010111001111001010101100000110111100011111101011100100100010101000011001100101000000101111011000010011010111100010001001000100001111100100000001000000001101101000000001010111010000001000010011100101111001101111011001001010001100010100000";
+	
 
 	static boolean debug = false;
 	
@@ -93,10 +96,12 @@ public class TripleSDES {
 		byte[] c = ct8;
 		
 		//Encryption
+		System.out.println("Triple Encrypted Text:");
 		printArray(Encrypt(r1, r2, p));
 		
 		// Decryption
-		printArray(Decrypt(r1, r2, c));
+		System.out.println("Triple Decrypted Text:");
+		printArray(Decrypt(r1, r2, toByteArray(msg2)));
 	}
 
 	public static byte[] Encrypt( byte[] rawkey1, byte[] rawkey2, byte[] plaintext) {
@@ -104,7 +109,6 @@ public class TripleSDES {
 		byte[] encrypted = null;
 		
 		encrypted = encryptMini(rawkey1, decryptMini(rawkey2, encryptMini(rawkey1, plaintext)));
-		System.out.println("Triple Encrypted Text:");
 		return encrypted;
 	}
 	
@@ -113,59 +117,79 @@ public class TripleSDES {
 		byte[] decrypted = null;
 		
 		decrypted = decryptMini(rawkey1, encryptMini(rawkey2, decryptMini(rawkey1, ciphertext)));
-		System.out.println("Triple Decrypted Text:");
 		return decrypted;
 	}
 	
 	public static byte[] encryptMini(byte[] rawkey, byte[] plaintext) {
-		byte[] encrypted = null;
+		byte[] encrypted = new byte[plaintext.length];
 		// Method consisting of P10, Left Shifts, and P8 to generate keys
 		ArrayList<byte[]> keys = GenerateKeys(rawkey);
 		byte[] k1 = keys.get(0);
 		byte[] k2 = keys.get(1);
 		
-		// Initial Permutation
-		byte[] ip = InitialPermutation(plaintext);
-		
-		// Round consisting of Expand/Permutate, XOR, S0 and S1, P4, and final XOR
-		byte[] round1 = round(ip, k1);
-		
-		// Swap
-		byte[] combined = combineBytes(subArray(ip, 4, 7), round1);
-		
-		// Round 2
-		byte[] round2 = round(combined, k2);
-		
-		// Swap 2
-		byte[] combined2 = combineBytes(round2, subArray(combined, 4, 7));
-		
-		// Inverse Permutation
-		encrypted = InversePermutation(combined2);
+		// If plaintext is longer than 8 bits
+		int ceiling = (int) Math.ceil(plaintext.length / 8) * 8;
+		for (int i=0; i<plaintext.length; i+=8) {
+			byte[] subplaintext = subArray(plaintext, i, i+7);
+			// Initial Permutation
+			byte[] ip = InitialPermutation(subplaintext);
+			
+			// Round consisting of Expand/Permutate, XOR, S0 and S1, P4, and final XOR
+			byte[] round1 = round(ip, k1);
+			
+			// Swap
+			byte[] combined = combineBytes(subArray(ip, 4, 7), round1);
+			
+			// Round 2
+			byte[] round2 = round(combined, k2);
+			
+			// Swap 2
+			byte[] combined2 = combineBytes(round2, subArray(combined, 4, 7));
+			
+			// Inverse Permutation
+			byte[] subEncryptedText = InversePermutation(combined2);
+			
+			for (int j=0; j<8; j++) {
+				encrypted[i+j] = subEncryptedText[j];
+			}
+			
+		}
 		return encrypted;
 	}
 	
 	public static byte[] decryptMini(byte[] rawkey, byte[] ciphertext) {
-		byte[] decrypted = null;
+		byte[] decrypted = new byte[ciphertext.length];
 		
 		ArrayList<byte[]> keys = GenerateKeys(rawkey);
 		byte[] k1 = keys.get(0);
 		byte[] k2 = keys.get(1);
 		
-		//IP
-		byte[] ip = InitialPermutation(ciphertext);
-		
-		//fk w/ K2
-		byte[] round1 = round(ip, k2);
-		
-		//SW
-		byte[] combined = combineBytes(subArray(ip, 4, 7), round1);
-		
-		//fk w/ K1
-		byte[] round2 = round(combined, k1);
-		byte[] combined2 = combineBytes(round2, subArray(combined, 4, 7));		
-		
-		//InvP
-		decrypted = InversePermutation(combined2);	
+		// In case ciphertext is greater than 8 bits
+		int ceiling = (int) Math.ceil(ciphertext.length / 8) * 8;
+		for (int i=0; i<ciphertext.length; i+=8) {
+			byte[] subciphertext = subArray(ciphertext, i, i+7);
+			
+			//IP
+			byte[] ip = InitialPermutation(subciphertext);
+			
+			//fk w/ K2
+			byte[] round1 = round(ip, k2);
+			
+			//SW
+			byte[] combined = combineBytes(subArray(ip, 4, 7), round1);
+			
+			//fk w/ K1
+			byte[] round2 = round(combined, k1);
+			byte[] combined2 = combineBytes(round2, subArray(combined, 4, 7));		
+			
+			//InvP
+			byte[] subDecryptedText = InversePermutation(combined2);	
+			
+			for (int j=0; j<8; j++) {
+				decrypted[i+j] = subDecryptedText[j];
+			}
+			
+		}	
 		return decrypted;
 	}
 	
@@ -401,6 +425,14 @@ public class TripleSDES {
 			System.out.print(array[i]);
 		}
 		System.out.println();
+	}
+	public static byte[] toByteArray (String message){
+		// Tried of turning strings to byte[] manually, so here's a function to do that
+		byte[] temp = new byte[message.length()];
+		for(int i = 0; i < message.length(); i++){
+			temp[i] = (message.charAt(i) == '1') ? (byte)1 : (byte)0;
+		}
+		return temp;
 	}
 	
 }
