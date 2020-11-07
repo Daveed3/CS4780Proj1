@@ -21,8 +21,8 @@ public class Cracking {
 
 	
 	public static void main(String[] args) {		
-		part1();
-		part2();
+//		part1();
+//		part2();
 		part3(); // Takes about a minute to complete		
 	}
 	
@@ -32,7 +32,7 @@ public class Cracking {
 		// Convert message to CASCII byte array
 		byte[] plaintext = CASCII.Convert(string);
 		
-		// Ecrypt the CASCII message with the key
+		// Encrypt the CASCII message with the key
 		byte[] ciphertext = SDES.Encrypt(toByteArray(rawkey), plaintext);
 		
 		System.out.println("Encrypted Message: ");

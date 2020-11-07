@@ -56,59 +56,9 @@ public class SDES {
 		
 	static boolean debug = false;
 
-	public static void main(String[] args) {
-		byte[] rk0 = {1,0,1,0,0,0,0,0,1,0};
-		byte[] rk1 = {0,0,0,0,0,0,0,0,0,0};
-		byte[] rk2 = {1,1,1,0,0,0,1,1,1,0};
-		byte[] rk3 = {1,1,1,0,0,0,1,1,1,0};
-		byte[] rk4 = {1,1,1,1,1,1,1,1,1,1};
-		
-		byte[] pt0 = {0,1,1,1,0,0,1,0};
-		byte[] pt1 = {1,0,1,0,1,0,1,0};
-		byte[] pt2 = {1,0,1,0,1,0,1,0};
-		byte[] pt3 = {0,1,0,1,0,1,0,1};
-		byte[] pt4 = {1,0,1,0,1,0,1,0};
-		
-		byte[] ct0 = {0,1,1,1,0,1,1,1};
-		byte[] ct1 = {0,0,0,1,0,0,0,1};
-		byte[] ct2 = {1,1,0,0,1,0,1,0};
-		byte[] ct3 = {0,1,1,1,0,0,0,0};
-		byte[] ct4 = {0,0,0,0,0,1,0,0};
-		
-		byte[] rawkey1 = {0,0,0,0,0, 0,0,0,0,0};
-		byte[] rawkey2 = {1,1,1,1,1, 1,1,1,1,1};
-		byte[] rawkey3 = {0,0,0,0,0, 1,1,1,1,1};
-		byte[] rawkey4 = {0,0,0,0,0, 1,1,1,1,1};
-		byte[] rawkey5 = {1,0,0,0,1, 0,1,1,1,0};
-		byte[] rawkey6 = {1,0,0,0,1, 0,1,1,1,0};
-		byte[] rawkey7 = {0,0,1,0,0, 1,1,1,1,1};
-		byte[] rawkey8 = {0,0,1,0,0, 1,1,1,1,1}; 
-		byte[] plaintext1 = {0,0,0,0,0,0,0,0};
-		byte[] plaintext2 = {1,1,1,1,1,1,1,1};
-		byte[] plaintext3 = {0,0,0,0,0,0,0,0};
-		byte[] plaintext4 = {1,1,1,1,1,1,1,1}; 
-		byte[] plaintext5 = {0,0,1,1, 1,0,0,0};
-		byte[] plaintext6 = {0,0,0,0, 1,1,0,0};
-		byte[] plaintext7 = {1,1,1,1, 1,1,0,0};
-		byte[] plaintext8 = {1,0,1,0, 0,1,0,1};
-		byte[] ciphertext1 = {1,1,1,1, 0,0,0,0};
-		byte[] ciphertext2 = {0,0,0,0, 1,1,1,1};
-		byte[] ciphertext3 = {0,0,0,0,0,0,0,0};
-		byte[] ciphertext4 = {1,1,1,0, 0,0,0,1}; 
-		byte[] ciphertext5 = {0,0,0,1, 1,1,0,0};
-		byte[] ciphertext6 = {1,1,0,0, 0,0,1,0};
-		byte[] ciphertext7 = {1,0,0,1, 1,1,0,1};
-		byte[] ciphertext8 = {1,0,0,1, 0,0,0,0};
-		
-		
-		byte[] r = rawkey1;
-		byte[] c = ciphertext1;
-		byte[] p = plaintext1;
-
-		System.out.println("EncryptedText");
-		printArray(Encrypt(r, p));
-		System.out.println("Decrypted Text:");
-		printArray(Decrypt(r, c));
+	public static void main(String[] args) {	
+		projectExamples();
+		problem1();
 	}
 	
 	public static byte[] Encrypt(byte[] rawkey, byte[] plaintext) {
@@ -427,11 +377,128 @@ public class SDES {
 		return keys;
 	}
 	
+	public static void projectExamples() {
+		byte[] rk0 = {1,0,1,0,0,0,0,0,1,0};
+		byte[] rk1 = {0,0,0,0,0,0,0,0,0,0};
+		byte[] rk2 = {1,1,1,0,0,0,1,1,1,0};
+		byte[] rk3 = {1,1,1,0,0,0,1,1,1,0};
+		byte[] rk4 = {1,1,1,1,1,1,1,1,1,1};
+		ArrayList<byte[]> rawkeyList = new ArrayList<byte[]>();
+		rawkeyList.add(rk0);
+		rawkeyList.add(rk1);
+		rawkeyList.add(rk2);
+		rawkeyList.add(rk3);
+		rawkeyList.add(rk4);
+		
+		byte[] pt0 = {0,1,1,1,0,0,1,0};
+		byte[] pt1 = {1,0,1,0,1,0,1,0};
+		byte[] pt2 = {1,0,1,0,1,0,1,0};
+		byte[] pt3 = {0,1,0,1,0,1,0,1};
+		byte[] pt4 = {1,0,1,0,1,0,1,0};
+		ArrayList<byte[]> plaintextList = new ArrayList<byte[]>();
+		plaintextList.add(pt0);
+		plaintextList.add(pt1);
+		plaintextList.add(pt2);
+		plaintextList.add(pt3);
+		plaintextList.add(pt4);
+		
+		byte[] ct0 = {0,1,1,1,0,1,1,1};
+		byte[] ct1 = {0,0,0,1,0,0,0,1};
+		byte[] ct2 = {1,1,0,0,1,0,1,0};
+		byte[] ct3 = {0,1,1,1,0,0,0,0};
+		byte[] ct4 = {0,0,0,0,0,1,0,0};
+		ArrayList<byte[]> ciphertextList = new ArrayList<byte[]>();
+		ciphertextList.add(ct0);
+		ciphertextList.add(ct1);
+		ciphertextList.add(ct2);
+		ciphertextList.add(ct3);
+		ciphertextList.add(ct4);
+		
+		System.out.println("Rawkey\t\t\tEncrypted Text\t\tDecrypted Text");
+		for (int i=0; i<rawkeyList.size(); i++) {
+			beautifyPrint(rawkeyList.get(i), Encrypt(rawkeyList.get(i), plaintextList.get(i)), Decrypt(rawkeyList.get(i), ciphertextList.get(i)));
+		}
+		System.out.println();
+	}
+	
+	public static void problem1() {	
+		byte[] rawkey1 = {0,0,0,0,0, 0,0,0,0,0};
+		byte[] rawkey2 = {1,1,1,1,1, 1,1,1,1,1};
+		byte[] rawkey3 = {0,0,0,0,0, 1,1,1,1,1};
+		byte[] rawkey4 = {0,0,0,0,0, 1,1,1,1,1};
+		byte[] rawkey5 = {1,0,0,0,1, 0,1,1,1,0};
+		byte[] rawkey6 = {1,0,0,0,1, 0,1,1,1,0};
+		byte[] rawkey7 = {0,0,1,0,0, 1,1,1,1,1};
+		byte[] rawkey8 = {0,0,1,0,0, 1,1,1,1,1}; 
+		ArrayList<byte[]> rkList = new ArrayList<byte[]>();
+		rkList.add(rawkey1);
+		rkList.add(rawkey2);
+		rkList.add(rawkey3);
+		rkList.add(rawkey4);
+		rkList.add(rawkey5);
+		rkList.add(rawkey6);
+		rkList.add(rawkey7);
+		rkList.add(rawkey8);
+		byte[] plaintext1 = {0,0,0,0,0,0,0,0};
+		byte[] plaintext2 = {1,1,1,1,1,1,1,1};
+		byte[] plaintext3 = {0,0,0,0,0,0,0,0};
+		byte[] plaintext4 = {1,1,1,1,1,1,1,1}; 
+		byte[] plaintext5 = {0,0,1,1, 1,0,0,0};
+		byte[] plaintext6 = {0,0,0,0, 1,1,0,0};
+		byte[] plaintext7 = {1,1,1,1, 1,1,0,0};
+		byte[] plaintext8 = {1,0,1,0, 0,1,0,1};
+		ArrayList<byte[]> ptList = new ArrayList<byte[]>();
+		ptList.add(plaintext1);
+		ptList.add(plaintext2);
+		ptList.add(plaintext3);
+		ptList.add(plaintext4);
+		ptList.add(plaintext5);
+		ptList.add(plaintext6);
+		ptList.add(plaintext7);
+		ptList.add(plaintext8);
+		byte[] ciphertext1 = {1,1,1,1, 0,0,0,0};
+		byte[] ciphertext2 = {0,0,0,0, 1,1,1,1};
+		byte[] ciphertext3 = {0,0,0,0,0,0,0,0};
+		byte[] ciphertext4 = {1,1,1,0, 0,0,0,1}; 
+		byte[] ciphertext5 = {0,0,0,1, 1,1,0,0};
+		byte[] ciphertext6 = {1,1,0,0, 0,0,1,0};
+		byte[] ciphertext7 = {1,0,0,1, 1,1,0,1};
+		byte[] ciphertext8 = {1,0,0,1, 0,0,0,0};
+		ArrayList<byte[]> ctList = new ArrayList<byte[]>();
+		ctList.add(ciphertext1);
+		ctList.add(ciphertext2);
+		ctList.add(ciphertext3);
+		ctList.add(ciphertext4);
+		ctList.add(ciphertext5);
+		ctList.add(ciphertext6);
+		ctList.add(ciphertext7);
+		ctList.add(ciphertext8);
+
+		System.out.println("Rawkey\t\t\tEncrypted Text\t\tDecrypted Text");
+		for (int i=0; i<rkList.size(); i++) {
+			beautifyPrint(rkList.get(i), Encrypt(rkList.get(i), ptList.get(i)), Decrypt(rkList.get(i), ctList.get(i)));			
+		}
+		System.out.println();
+		
+	}
+	
 	public static void printArray(byte[] array) {
 		for (int i=0; i< array.length; i++) {
 			System.out.print(array[i]);
 		}
 		System.out.println();
+	}
+	
+	public static String getArray(byte[] array) {
+		String s = "";
+		for (int i=0; i<array.length; i++) {
+			s += array[i];
+		}
+		return s;
+	}
+	
+	public static void beautifyPrint(byte[] rk, byte[] pt, byte[] ct) {
+		System.out.println(getArray(rk) + "\t\t" + getArray(pt) + "\t\t" + getArray(ct));
 	}
 	
 	public static byte[] toByteArray (String message){

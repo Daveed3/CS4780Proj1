@@ -46,62 +46,11 @@ public class TripleSDES {
 		{"10", "00", "01", "11"},
 		{"11", "00", "01", "00"},
 		{"10", "01", "00", "11"} };
-	
-	static String msg2 = "00011111100111111110011111101100111000000011001011110010101010110001011101001101000000110011010111111110000000001010111111000001010010111001111001010101100000110111100011111101011100100100010101000011001100101000000101111011000010011010111100010001001000100001111100100000001000000001101101000000001010111010000001000010011100101111001101111011001001010001100010100000";
-	
 
 	static boolean debug = false;
 	
 	public static void main(String[] args) {
-		byte[] rk1_1 = {0,0,0,0,0, 0,0,0,0,0};
-		byte[] rk1_2 = {1,0,0,0,1, 0,1,1,1,0};
-		byte[] rk1_3 = {1,0,0,0,1, 0,1,1,1,0};
-		byte[] rk1_4 = {1,1,1,1,1, 1,1,1,1,1};
-		byte[] rk1_5 = {1,0,0,0,1, 0,1,1,1,0};
-		byte[] rk1_6 = {1,0,1,1,1, 0,1,1,1,1};
-		byte[] rk1_7 = {0,0,0,0,0, 0,0,0,0,0};
-		byte[] rk1_8 = {1,1,1,1,1, 1,1,1,1,1};
-		
-		byte[] rk2_1 = {0,0,0,0,0, 0,0,0,0,0};
-		byte[] rk2_2 = {0,1,1,0,1, 0,1,1,1,0};
-		byte[] rk2_3 = {0,1,1,0,1, 0,1,1,1,0};
-		byte[] rk2_4 = {1,1,1,1,1, 1,1,1,1,1};
-		byte[] rk2_5 = {0,1,1,0,1, 0,1,1,1,0};
-		byte[] rk2_6 = {0,1,1,0,1, 0,1,1,1,0};
-		byte[] rk2_7 = {0,0,0,0,0, 0,0,0,0,0};
-		byte[] rk2_8 = {1,1,1,1,1, 1,1,1,1,1};
-		
-		byte[] pt1 = {0,0,0,0, 0,0,0,0};
-		byte[] pt2 = {1,1,0,1, 0,1,1,1};
-		byte[] pt3 = {1,0,1,0, 1,0,1,0};
-		byte[] pt4 = {1,0,1,0, 1,0,1,0};
-		byte[] pt5 = {1,1,1,1, 1,1,0,1};
-		byte[] pt6 = {0,1,0,0, 1,1,1,1};
-		byte[] pt7 = {0,1,0,1, 0,0,1,0};
-		byte[] pt8 = {0,0,1,0, 0,1,0,1};
-		
-		byte[] ct1 = {1,1,1,1, 0,0,0,0};
-		byte[] ct2 = {1,0,1,1, 1,0,0,1};
-		byte[] ct3 = {1,1,1,0, 0,1,0,0};
-		byte[] ct4 = {0,0,0,0, 0,1,0,0};
-		byte[] ct5 = {1,1,1,0, 0,1,1,0};
-		byte[] ct6 = {0,1,0,1, 0,0,0,0};
-		byte[] ct7 = {1,0,0,0, 0,0,0,0};
-		byte[] ct8 = {1,0,0,1, 0,0,1,0};
-		
-		
-		byte[] r1 = rk1_8;
-		byte[] r2 = rk2_8;
-		byte[] p = pt8;
-		byte[] c = ct8;
-		
-		//Encryption
-		System.out.println("Triple Encrypted Text:");
-		printArray(Encrypt(r1, r2, p));
-		
-		// Decryption
-		System.out.println("Triple Decrypted Text:");
-		printArray(Decrypt(r1, r2, toByteArray(msg2)));
+		problem2();
 	}
 
 	public static byte[] Encrypt( byte[] rawkey1, byte[] rawkey2, byte[] plaintext) {
@@ -191,6 +140,86 @@ public class TripleSDES {
 			
 		}	
 		return decrypted;
+	}
+	
+	public static void problem2() {
+		byte[] rk1_1 = {0,0,0,0,0, 0,0,0,0,0};
+		byte[] rk1_2 = {1,0,0,0,1, 0,1,1,1,0};
+		byte[] rk1_3 = {1,0,0,0,1, 0,1,1,1,0};
+		byte[] rk1_4 = {1,1,1,1,1, 1,1,1,1,1};
+		byte[] rk1_5 = {1,0,0,0,1, 0,1,1,1,0};
+		byte[] rk1_6 = {1,0,1,1,1, 0,1,1,1,1};
+		byte[] rk1_7 = {0,0,0,0,0, 0,0,0,0,0};
+		byte[] rk1_8 = {1,1,1,1,1, 1,1,1,1,1};
+		ArrayList<byte[]> rk1List = new ArrayList<byte[]>();
+		rk1List.add(rk1_1);
+		rk1List.add(rk1_2);
+		rk1List.add(rk1_3);
+		rk1List.add(rk1_4);
+		rk1List.add(rk1_5);
+		rk1List.add(rk1_6);
+		rk1List.add(rk1_7);
+		rk1List.add(rk1_8);
+		
+		byte[] rk2_1 = {0,0,0,0,0, 0,0,0,0,0};
+		byte[] rk2_2 = {0,1,1,0,1, 0,1,1,1,0};
+		byte[] rk2_3 = {0,1,1,0,1, 0,1,1,1,0};
+		byte[] rk2_4 = {1,1,1,1,1, 1,1,1,1,1};
+		byte[] rk2_5 = {0,1,1,0,1, 0,1,1,1,0};
+		byte[] rk2_6 = {0,1,1,0,1, 0,1,1,1,0};
+		byte[] rk2_7 = {0,0,0,0,0, 0,0,0,0,0};
+		byte[] rk2_8 = {1,1,1,1,1, 1,1,1,1,1};
+		ArrayList<byte[]> rk2List = new ArrayList<byte[]>();
+		rk2List.add(rk2_1);
+		rk2List.add(rk2_2);
+		rk2List.add(rk2_3);
+		rk2List.add(rk2_4);
+		rk2List.add(rk2_5);
+		rk2List.add(rk2_6);
+		rk2List.add(rk2_7);
+		rk2List.add(rk2_8);
+		
+		byte[] pt1 = {0,0,0,0, 0,0,0,0};
+		byte[] pt2 = {1,1,0,1, 0,1,1,1};
+		byte[] pt3 = {1,0,1,0, 1,0,1,0};
+		byte[] pt4 = {1,0,1,0, 1,0,1,0};
+		byte[] pt5 = {1,1,1,1, 1,1,0,1};
+		byte[] pt6 = {0,1,0,0, 1,1,1,1};
+		byte[] pt7 = {0,1,0,1, 0,0,1,0};
+		byte[] pt8 = {0,0,1,0, 0,1,0,1};
+		ArrayList<byte[]> ptList = new ArrayList<byte[]>();
+		ptList.add(pt1);
+		ptList.add(pt2);
+		ptList.add(pt3);
+		ptList.add(pt4);
+		ptList.add(pt5);
+		ptList.add(pt6);
+		ptList.add(pt7);
+		ptList.add(pt8);
+		
+		byte[] ct1 = {1,1,1,1, 0,0,0,0};
+		byte[] ct2 = {1,0,1,1, 1,0,0,1};
+		byte[] ct3 = {1,1,1,0, 0,1,0,0};
+		byte[] ct4 = {0,0,0,0, 0,1,0,0};
+		byte[] ct5 = {1,1,1,0, 0,1,1,0};
+		byte[] ct6 = {0,1,0,1, 0,0,0,0};
+		byte[] ct7 = {1,0,0,0, 0,0,0,0};
+		byte[] ct8 = {1,0,0,1, 0,0,1,0};
+		ArrayList<byte[]> ctList = new ArrayList<byte[]>();
+		ctList.add(ct1);
+		ctList.add(ct2);
+		ctList.add(ct3);
+		ctList.add(ct4);
+		ctList.add(ct5);
+		ctList.add(ct6);
+		ctList.add(ct7);
+		ctList.add(ct8);
+		
+		System.out.println("Rawkey 1\t\tRawkey 2\t\tEncrypted Text\t\tDecrypted Text");
+		for (int i=0; i<rk1List.size(); i++) {
+			beautifyPrint(rk1List.get(i), rk2List.get(i), Encrypt(rk1List.get(i), rk2List.get(i), ptList.get(i)), Decrypt(rk1List.get(i), rk2List.get(i), ctList.get(i)));			
+		}
+		System.out.println();
 	}
 	
 	public static byte[] P10(byte[] rawkey) {
@@ -425,6 +454,16 @@ public class TripleSDES {
 			System.out.print(array[i]);
 		}
 		System.out.println();
+	}
+	public static String getArray(byte[] array) {
+		String s = "";
+		for (int i=0; i<array.length; i++) {
+			s += array[i];
+		}
+		return s;
+	}
+	public static void beautifyPrint(byte[] rk1, byte[] rk2, byte[] pt, byte[] ct) {
+		System.out.println(getArray(rk1) + "\t\t" + getArray(rk2) + "\t\t" + getArray(pt) + "\t\t" + getArray(ct));
 	}
 	public static byte[] toByteArray (String message){
 		// Tried of turning strings to byte[] manually, so here's a function to do that
